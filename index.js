@@ -14,10 +14,11 @@ bot.setMyCommands([
   { command: '/info', description: 'Посмотреть набранные очки' },
   { command: '/rules', description: 'Правила' },
   { command: '/leaderboard', description: 'Лидеры OLIMPBET QUIZ' },
+  { command: '/promo', description: 'Акции OLIMPBET' },
 ]);
 
-const startQuestion = async (chatId) => {
-  const user = await UserModel.findOne({ where: { chatId: chatId } });
+const startQuestion = async (chatId, user) => {
+  // const user = await UserModel.findOne({ where: { chatId: chatId } });
   let questionIndex = user.countAnswers;
   let question = questions[questionIndex];
   let answerOptions = {
@@ -51,7 +52,7 @@ const startQuestion = async (chatId) => {
     }),
   };
   let timer = 30;
-  const basePoints = 10;
+  const basePoints = 60;
   let imgMsgId = '';
   bot
     .sendPhoto(chatId, question.img)
@@ -62,12 +63,12 @@ const startQuestion = async (chatId) => {
     })
     .then(() => {
       bot
-        .sendMessage(chatId, `${question.text}`, answerOptions)
+        .sendMessage(chatId, `Всего 30 секунд от ответ!`, answerOptions)
         .then((msgData) => {
           let intervalId = setInterval(() => {
             timer--;
             bot.editMessageText(
-              `${question.text}. \n\n‼️<b><i>Осталось ${timer} секунд.</i></b>‼️`,
+              `Всего 30 секунд от ответ! \n\n‼️<b><i>Осталось ${timer} секунд.</i></b>‼️`,
               {
                 ...answerOptions,
                 chat_id: msgData.chat.id,
@@ -85,9 +86,9 @@ const startQuestion = async (chatId) => {
                 `Ответ на вопрос №${
                   question.id
                 }: \nВремя на ответ вышло :( Переходи к следующему вопросу командой /quiz \n\n${
-                  questions[questionId].date
+                  questions[questionIndex + 1].date
                     ? `Следующий вопрос будет доступен c ${new Date(
-                        questions[questionId].date * 1000
+                        questions[questionIndex + 1].date * 1000
                       ).toLocaleString('ru-RU')}`
                     : 'Это был последний вопрос'
                 }`,
@@ -163,7 +164,7 @@ const startQuestion = async (chatId) => {
 const start = async () => {
   try {
     await sequelize.authenticate();
-    await sequelize.sync({ force: true }); //{ force: true } to drop db
+    await sequelize.sync(); //{ force: true } to drop db
   } catch (e) {
     console.log('Error' + e);
   }
@@ -197,7 +198,14 @@ const start = async () => {
       if (text === '/rules') {
         return bot.sendMessage(
           chatId,
-          `<b>Период акции:</b> с 2 по 6 июля \n\n<b>Количество вопросов:</b> 15 вопросов, вопросы становятся доступными по одному с 2 по 6 июля в 10:00, 15:00, 20:00 по МСК \n\n<b>Время на ответ:</b> 30 секунд \n\n<b>Порядок начисления очков:</b> Базовая стоимость правильного ответа 10 очков. Конечное количество очков рассчитывается как сумма базовой стоимости и количества оставшихся секунд на ответ. \n\n<b>Подведение итогов: </b> 6 июля мы свяжемся с 5 игроками с наибольшим количеством очков.`,
+          `<b>Период акции:</b> с 1 по 5 июля 23:59 по МСК \n\n<b>Количество вопросов:</b> 15 вопросов, вопросы становятся доступными по одному с 1 по 5 июля в 10:00, 15:00, 20:00 по МСК \n\n<b>Время на ответ:</b> 30 секунд \n\n<b>Порядок начисления очков:</b> Базовая стоимость правильного ответа 60 очков. Конечное количество очков рассчитывается как сумма базовой стоимости и количества оставшихся секунд на ответ. \n\n<b>Подведение итогов: </b> 6 июля мы свяжемся с 5 игроками с наибольшим количеством очков.`,
+          { parse_mode: 'HTML' }
+        );
+      }
+      if (text === '/promo') {
+        return bot.sendMessage(
+          chatId,
+          `<a href="https://www.olimp.bet/promo/welcome_1500/?utm_source=bot_quiz&utm_medium=refer">🎁1500 рублей без условий и депозита для новых клиентов</a> \n\n<a href="https://www.olimp.bet/promo/freebet/?utm_source=bot_quiz&utm_medium=refer">🤑30 000 рублей бонус на первый депозит для новых клиентов</a> \n\n<a href="https://www.olimp.bet/promo/bonus-club/?utm_source=bot_quiz&utm_medium=refer">🧰Вступай в бонус-клуб OLIMPBET и получай фрибеты, деньги на счет и кэшбэк до 20%!</a> \n\n<a href="https://www.olimp.bet/promo/bonus-na-express-100/?utm_source=bot_quiz&utm_medium=refer">🤩Собирай экспрессы OLIMPBET и получай бонус до 100% к выигрышу!</a>`,
           { parse_mode: 'HTML' }
         );
       }
@@ -222,27 +230,27 @@ const start = async () => {
           `ТОП-5 знатоков 🏆<b>OLIMPBET Суперкубка России</b>🏆:
           ${
             leaders[0]
-              ? `\n1️⃣<b>${leaders[0].username}</b>, количество очков: ${leaders[0].score}`
+              ? `\n1️⃣ <b>${leaders[0].username}</b>, количество очков: ${leaders[0].score}`
               : 'Пока знатоков нет 🤷‍♂️'
           }
           ${
             leaders[1]
-              ? `\n2️⃣<b>${leaders[1].username}</b>, количество очков: ${leaders[1].score}`
+              ? `\n2️⃣ <b>${leaders[1].username}</b>, количество очков: ${leaders[1].score}`
               : ''
           }
           ${
             leaders[2]
-              ? `\n3️⃣<b>${leaders[2].username}</b>, количество очков: ${leaders[2].score}`
+              ? `\n3️⃣ <b>${leaders[2].username}</b>, количество очков: ${leaders[2].score}`
               : ''
           }
           ${
             leaders[2]
-              ? `\n4️⃣<b>${leaders[3].username}</b>, количество очков: ${leaders[3].score}`
+              ? `\n4️⃣ <b>${leaders[3].username}</b>, количество очков: ${leaders[3].score}`
               : ''
           }
           ${
             leaders[2]
-              ? `\n5️⃣<b>${leaders[4].username}</b>, количество очков: ${leaders[4].score}`
+              ? `\n5️⃣ <b>${leaders[4].username}</b>, количество очков: ${leaders[4].score}`
               : ''
           }`,
           { parse_mode: 'HTML' }
@@ -254,6 +262,16 @@ const start = async () => {
         });
         const currentDate = new Date().getTime() / 1000;
         const canAnswer = user.countAnswers < questionsTest.length;
+        console.log(currentDate);
+        if (currentDate > 1657054799) {
+          return bot.sendMessage(
+            chatId,
+            'Время на ответы истекло, мы уже начали подводить итоги. \nТы можешь посмотреть свою статистику командой /info и общий зачет командой /leaderboard',
+            {
+              parse_mode: 'HTML',
+            }
+          );
+        }
         if (!canAnswer) {
           return bot.sendMessage(
             chatId,
@@ -279,7 +297,7 @@ const start = async () => {
           );
         }
         if (availableQuestions.length > user.countAnswers) {
-          return startQuestion(chatId);
+          return startQuestion(chatId, user);
         }
         return bot.sendMessage(
           chatId,

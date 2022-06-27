@@ -1,7 +1,7 @@
 const questionsTest = [
   {
     id: 1,
-    img: 'https://i.imgur.com/70wRydJ.jpg',
+    img: 'https://landings.olimp.dev/quiz/1.png',
     text: 'В каком году прошел первый розыгрыш OLIMPBET Суперкубка России?',
     correct: '2003',
     variant1: '1996',
@@ -13,7 +13,7 @@ const questionsTest = [
   },
   {
     id: 2,
-    img: 'https://i.imgur.com/JDdsVLp.jpg',
+    img: 'https://landings.olimp.dev/quiz/2.png',
     text: 'Кто выиграл в первом розыгрыше OLIMPBET Суперкубка России?',
     correct: 'Локомотив',
     variant1: 'Локомотив',
@@ -24,7 +24,7 @@ const questionsTest = [
   },
   {
     id: 3,
-    img: 'https://i.imgur.com/uTeobcB.jpg',
+    img: 'https://landings.olimp.dev/quiz/3.png',
     text: 'Какой клуб больше всех брал OLIMPBET Суперкубок России?',
     correct: 'ЦСКА',
     variant1: 'Зенит',
@@ -35,7 +35,7 @@ const questionsTest = [
   },
   {
     id: 4,
-    img: 'https://i.imgur.com/cLMxIHN.jpg',
+    img: 'https://landings.olimp.dev/quiz/4.png',
     text: 'Какой из этих клубов никогда не играл в OLIMPBET Суперкубке России?',
     correct: 'Динамо',
     variant1: 'Рубин',
@@ -46,7 +46,7 @@ const questionsTest = [
   },
   {
     id: 5,
-    img: 'https://i.imgur.com/7jQtkk9.jpg',
+    img: 'https://landings.olimp.dev/quiz/5.png',
     text: 'Кто является лучшим бомбардиром в истории OLIMPBET Суперкубке России? (2 игрока)',
     correct: 'Жо + Сердар Азмун',
     variant1: 'Жо + Сердар Азмун',
@@ -57,7 +57,7 @@ const questionsTest = [
   },
   {
     id: 6,
-    img: 'https://i.imgur.com/LCJNtzc.jpg',
+    img: 'https://landings.olimp.dev/quiz/6.png',
     text: 'С каким счетом закончился прошлогодний розыгрыш OLIMPBET Суперкубка России?',
     correct: 'Зенит 3-0 Локомотив',
     variant1: 'Зенит 1-1 Локомотив',
@@ -68,7 +68,7 @@ const questionsTest = [
   },
   {
     id: 7,
-    img: 'https://i.imgur.com/iNhrmJh.jpg',
+    img: 'https://landings.olimp.dev/quiz/7.png',
     text: 'Кто из тренеров больше всех брал трофей OLIMPBET Суперкубок России?',
     correct: 'Юрий Семин',
     variant1: 'Юрий Семин',
@@ -79,7 +79,7 @@ const questionsTest = [
   },
   {
     id: 8,
-    img: 'https://i.imgur.com/AwaV3Hf.jpg',
+    img: 'https://landings.olimp.dev/quiz/8.png',
     text: 'В каком из этих городов раннее не проводился OLIMPBET Суперкубок России?',
     correct: 'Казань',
     variant1: 'Калининград',
@@ -90,7 +90,7 @@ const questionsTest = [
   },
   {
     id: 9,
-    img: 'https://i.imgur.com/tpD2AFL.jpg',
+    img: 'https://landings.olimp.dev/quiz/9.png',
     text: 'Какой клуб не смог принять участие в OLIMPBET Суперкубке России из-за финансовых проблем?',
     correct: 'Тосно',
     variant1: 'Тосно',
@@ -101,7 +101,7 @@ const questionsTest = [
   },
   {
     id: 10,
-    img: 'https://i.imgur.com/lEo4mbZ.jpg',
+    img: 'https://landings.olimp.dev/quiz/10.png',
     text: 'В каком году OLIMPBET Суперкубок России собрал больше всего зрителей на стадионе?',
     correct: '2008',
     variant1: '2021',
@@ -112,7 +112,7 @@ const questionsTest = [
   },
   {
     id: 11,
-    img: 'https://i.imgur.com/R7vYE51.jpg',
+    img: 'https://landings.olimp.dev/quiz/11.png',
     text: 'Кто из данных игроков выиграл OLIMPBET Суперкубок России с тремя разными клубами?',
     correct: 'Сергей Семак',
     variant1: 'Денис Глушаков',
@@ -123,7 +123,7 @@ const questionsTest = [
   },
   {
     id: 12,
-    img: 'https://i.imgur.com/fagiNIg.jpg',
+    img: 'https://landings.olimp.dev/quiz/12.png',
     text: 'Кто автор самого быстрого гола в истории OLIMPBET Суперкубок России?',
     correct: 'Вагнер Лав',
     variant1: 'Вагнер Лав',
@@ -134,7 +134,7 @@ const questionsTest = [
   },
   {
     id: 13,
-    img: 'https://i.imgur.com/r2NgXBQ.jpg',
+    img: 'https://landings.olimp.dev/quiz/13.png',
     text: 'Кто автор самого позднего гола в истории OLIMPBET Суперкубок России? ',
     correct: 'Марио Фернандеш',
     variant1: 'Марио Фернандеш',
@@ -145,7 +145,7 @@ const questionsTest = [
   },
   {
     id: 14,
-    img: 'https://i.imgur.com/dsoX37y.jpg',
+    img: 'https://landings.olimp.dev/quiz/14.png',
     text: 'Кто забил единственный гол в розыгрыше OLIMPBET Суперкубка России 2005 года?',
     correct: 'Дмитрий Лоськов',
     variant1: 'Марат Измайлов',
@@ -156,7 +156,7 @@ const questionsTest = [
   },
   {
     id: 15,
-    img: 'https://i.imgur.com/PiLbmBv.jpg',
+    img: 'https://landings.olimp.dev/quiz/15.png',
     text: 'В каком году был самый результативный розыгрыш OLIMPBET Суперкубка России?',
     correct: '2007',
     variant1: '2017',
