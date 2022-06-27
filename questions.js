@@ -8,8 +8,8 @@ const questions = [
     variant2: '1999',
     variant3: '2003',
     variant4: '2006',
-    date: '1655018831',
-    // date: '1656658800'
+    // date: '1655018831',
+    date: '1656658800',
   },
   {
     id: 2,

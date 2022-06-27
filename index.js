@@ -18,7 +18,6 @@ bot.setMyCommands([
 ]);
 
 const startQuestion = async (chatId, user) => {
-  // const user = await UserModel.findOne({ where: { chatId: chatId } });
   let questionIndex = user.countAnswers;
   let question = questions[questionIndex];
   let answerOptions = {
@@ -59,11 +58,14 @@ const startQuestion = async (chatId, user) => {
     .then((imgMsg) => {
       imgMsgId = imgMsg.message_id;
       imgMsgChatId = imgMsg.chat.chat_id;
-      console.log('post:', imgMsgId);
     })
     .then(() => {
       bot
-        .sendMessage(chatId, `Всего 30 секунд от ответ!`, answerOptions)
+        .sendMessage(
+          chatId,
+          `Всего 30 секунд от ответ! \n\n‼️<b><i>Осталось 30 секунд.</i></b>‼️`,
+          answerOptions
+        )
         .then((msgData) => {
           let intervalId = setInterval(() => {
             timer--;
@@ -86,7 +88,7 @@ const startQuestion = async (chatId, user) => {
                 `Ответ на вопрос №${
                   question.id
                 }: \nВремя на ответ вышло :( Переходи к следующему вопросу командой /quiz \n\n${
-                  questions[questionIndex + 1].date
+                  questions[questionIndex + 1]
                     ? `Следующий вопрос будет доступен c ${new Date(
                         questions[questionIndex + 1].date * 1000
                       ).toLocaleString('ru-RU')}`
@@ -123,7 +125,7 @@ const startQuestion = async (chatId, user) => {
                   `Ответ на вопрос №${
                     question.id
                   }: \nПравильно! Ты заработал ${totalPoints} очков! Попробуй ответить на следующий вопрос командой /quiz \n\n${
-                    questions[questionId].date
+                    questions[questionId]
                       ? `Следующий вопрос будет доступен c ${new Date(
                           questions[questionId].date * 1000
                         ).toLocaleString('ru-RU')}`
@@ -143,7 +145,7 @@ const startQuestion = async (chatId, user) => {
                   `Ответ на вопрос №${
                     question.id
                   }: \nМимо! Попробуй следующий вопрос командой /quiz \n\n${
-                    questions[questionId].date
+                    questions[questionId]
                       ? `Следующий вопрос будет доступен c ${new Date(
                           questions[questionId].date * 1000
                         ).toLocaleString('ru-RU')}`
@@ -261,8 +263,7 @@ const start = async () => {
           where: { chatId },
         });
         const currentDate = new Date().getTime() / 1000;
-        const canAnswer = user.countAnswers < questionsTest.length;
-        console.log(currentDate);
+        const canAnswer = user.countAnswers < questions.length;
         if (currentDate > 1657054799) {
           return bot.sendMessage(
             chatId,
@@ -281,7 +282,7 @@ const start = async () => {
             }
           );
         }
-        const availableQuestions = questionsTest.filter(
+        const availableQuestions = questions.filter(
           (q) => q.date < currentDate
         );
         if (
