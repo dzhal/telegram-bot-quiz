@@ -166,7 +166,7 @@ const startQuestion = async (chatId, user) => {
 const start = async () => {
   try {
     await sequelize.authenticate();
-    await sequelize.sync(); //{ force: true } to drop db
+    await sequelize.sync({ force: true }); //{ force: true } to drop db
   } catch (e) {
     console.log('Error' + e);
   }
@@ -227,6 +227,8 @@ const start = async () => {
           group: ['user.id'],
           limit: 5,
         });
+        console.log(leaders);
+        console.log(leaders[0]);
         return bot.sendMessage(
           chatId,
           `ТОП-5 знатоков 🏆<b>OLIMPBET Суперкубка России</b>🏆:
@@ -264,6 +266,9 @@ const start = async () => {
         });
         const currentDate = new Date().getTime() / 1000;
         const canAnswer = user.countAnswers < questions.length;
+        const availableQuestions = questions.filter(
+          (q) => q.date < currentDate
+        );
         if (currentDate > 1657054799) {
           return bot.sendMessage(
             chatId,
@@ -282,9 +287,7 @@ const start = async () => {
             }
           );
         }
-        const availableQuestions = questions.filter(
-          (q) => q.date < currentDate
-        );
+
         if (
           availableQuestions.length === 0 ||
           availableQuestions.length <= user.countAnswers
