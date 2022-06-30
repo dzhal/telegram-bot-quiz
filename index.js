@@ -263,6 +263,15 @@ const start = async () => {
         const user = await UserModel.findOne({
           where: { chatId },
         });
+        if (!username) {
+          return bot.sendMessage(
+            chatId,
+            '‼️ Необходимо открыть свой аккаунт в Telegram, указать свое имя пользователя в личных настройках, чтобы принять участие в «Olimpbet quiz», и мы могли связаться с победителями!',
+            {
+              parse_mode: 'HTML',
+            }
+          );
+        }
         if (!user.username) {
           try {
             user.username = username;
