@@ -217,7 +217,7 @@ const start = async () => {
         });
         return bot.sendMessage(
           chatId,
-          `Привет, ${firstName}!👋 \n\n<b>Количество пройденных вопросов:</b> ${user.countAnswers} \n\n✅ <b>Количество набранных очков:</b> ${user.score} \n\nОтвечай правильно на вопросы и зарабатывай очки 🙌`,
+          `Привет!👋 \n\n<b>Количество пройденных вопросов:</b> ${user.countAnswers} \n\n✅ <b>Количество набранных очков:</b> ${user.score} \n\nОтвечай правильно на вопросы и зарабатывай очки 🙌`,
           { parse_mode: 'HTML' }
         );
       }
@@ -263,6 +263,20 @@ const start = async () => {
         const user = await UserModel.findOne({
           where: { chatId },
         });
+        if (user.username === null) {
+          try {
+            user.username = username;
+            await user.save();
+          } catch (e) {
+            return bot.sendMessage(
+              chatId,
+              '‼️ Необходимо открыть свой аккаунт в Telegram, чтобы принять участие в «Olimpbet quiz», и мы могли связаться с победителями!',
+              {
+                parse_mode: 'HTML',
+              }
+            );
+          }
+        }
         const currentDate = new Date().getTime() / 1000;
         const canAnswer = user.countAnswers < questions.length;
         const availableQuestions = questions.filter(
