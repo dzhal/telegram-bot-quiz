@@ -263,7 +263,7 @@ const start = async () => {
         const user = await UserModel.findOne({
           where: { chatId },
         });
-        if (user.username === null) {
+        if (!user.username) {
           try {
             user.username = username;
             await user.save();
