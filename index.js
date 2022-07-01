@@ -338,6 +338,19 @@ const start = async () => {
         'Я тебя не понимаю, попробуй воспользоваться меню'
       );
     } catch (e) {
+      try {
+        await UserModel.create({
+          chatId: chatId,
+          username: username,
+        });
+      } catch (error) {
+        if (error.name === 'SequelizeUniqueConstraintError') {
+          return bot.sendMessage(
+            chatId,
+            `Ты уже зарегистрирован. Выбери в меню вопрос или введи команду /quiz`
+          );
+        }
+      }
       return bot.sendMessage(
         chatId,
         `Произошла ошибка: ${e}, попробуй еще раз`
