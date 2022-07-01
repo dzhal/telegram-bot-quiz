@@ -63,7 +63,7 @@ const startQuestion = async (chatId, user) => {
       bot
         .sendMessage(
           chatId,
-          `Всего 30 секунд от ответ! \n\n‼️<b><i>Осталось 30 секунд.</i></b>‼️`,
+          `Всего 30 секунд от ответ! \n\n‼️<b><i>Не теряй время</i></b>‼️`,
           answerOptions
         )
         .then((msgData) => {
