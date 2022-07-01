@@ -91,8 +91,8 @@ const startQuestion = async (chatId, user) => {
                 }: \nВремя на ответ вышло :( Переходи к следующему вопросу командой /quiz \n\n${
                   questions[questionIndex + 1]
                     ? `Следующий вопрос будет доступен c ${new Date(
-                        questions[questionIndex + 1].date * 1000
-                      ).toLocaleString('ru-RU')}`
+                        questions[questionIndex + 1].date * 1000 + 10800000
+                      ).toLocaleString('ru-RU')} по МСК`
                     : 'Это был последний вопрос'
                 }`,
                 {
@@ -128,8 +128,8 @@ const startQuestion = async (chatId, user) => {
                   }: \nПравильно! Ты заработал ${totalPoints} очков! Попробуй ответить на следующий вопрос командой /quiz \n\n${
                     questions[questionId]
                       ? `Следующий вопрос будет доступен c ${new Date(
-                          questions[questionId].date * 1000
-                        ).toLocaleString('ru-RU')}`
+                          questions[questionId].date * 1000 + 10800000
+                        ).toLocaleString('ru-RU')} по МСК`
                       : 'Это был последний вопрос'
                   }`,
                   {
@@ -148,8 +148,8 @@ const startQuestion = async (chatId, user) => {
                   }: \nМимо! Попробуй следующий вопрос командой /quiz \n\n${
                     questions[questionId]
                       ? `Следующий вопрос будет доступен c ${new Date(
-                          questions[questionId].date * 1000
-                        ).toLocaleString('ru-RU')}`
+                          questions[questionId].date * 1000 + 10800000
+                        ).toLocaleString('ru-RU')} по МСК`
                       : 'Это был последний вопрос'
                   }`,
                   {
