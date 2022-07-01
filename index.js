@@ -69,6 +69,7 @@ const startQuestion = async (chatId, user) => {
         )
         .then((msgData) => {
           let intervalId = setInterval(() => {
+            timer--;
             bot.editMessageText(
               `Всего 30 секунд от ответ! \n\n‼️<b><i>Осталось ${timer} секунд.</i></b>‼️`,
               {
@@ -78,12 +79,17 @@ const startQuestion = async (chatId, user) => {
                 parse_mode: 'HTML',
               }
             );
-            timer--;
             if (timer === 0) {
               clearInterval(intervalId);
               user.countAnswers++;
               user.save();
+              console.log(
+                `before. chatId: ${msgData.chat.id}, imgMsgId: ${imgMsgId}`
+              );
               bot.deleteMessage(msgData.chat.id, imgMsgId);
+              console.log(
+                `after. chatId: ${msgData.chat.id}, imgMsgId: ${imgMsgId}`
+              );
               bot.removeListener('callback_query');
               bot.editMessageText(
                 `Ответ на вопрос №${
@@ -111,7 +117,13 @@ const startQuestion = async (chatId, user) => {
             const message_id = msg.message.message_id;
 
             if (/^\d{1,2}_.+/i.test(msg.data)) {
+              console.log(
+                `before. chatId: ${msgData.chat.id}, imgMsgId: ${imgMsgId}`
+              );
               bot.deleteMessage(msgData.chat.id, imgMsgId);
+              console.log(
+                `after. chatId: ${msgData.chat.id}, imgMsgId: ${imgMsgId}`
+              );
               if (
                 questionText ===
                 questions.find((item) => item.id == questionId).correct
@@ -161,6 +173,9 @@ const startQuestion = async (chatId, user) => {
             }
           });
         });
+    })
+    .catch((error) => {
+      console.log(error);
     });
 };
 
