@@ -22,6 +22,7 @@ const startQuestion = async (chatId, user) => {
   let question = questions[questionIndex];
   let answerOptions = {
     reply_markup: JSON.stringify({
+      one_time_keyboard: true,
       inline_keyboard: [
         [
           {
@@ -64,11 +65,10 @@ const startQuestion = async (chatId, user) => {
         .sendMessage(
           chatId,
           `Всего 30 секунд от ответ! \n\n‼️<b><i>Не теряй время</i></b>‼️`,
-          answerOptions
+          { parse_mode: 'HTML' }
         )
         .then((msgData) => {
           let intervalId = setInterval(() => {
-            timer--;
             bot.editMessageText(
               `Всего 30 секунд от ответ! \n\n‼️<b><i>Осталось ${timer} секунд.</i></b>‼️`,
               {
@@ -78,6 +78,7 @@ const startQuestion = async (chatId, user) => {
                 parse_mode: 'HTML',
               }
             );
+            timer--;
             if (timer === 0) {
               clearInterval(intervalId);
               user.countAnswers++;
