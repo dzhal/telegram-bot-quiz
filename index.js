@@ -121,62 +121,54 @@ const startQuestion = async (chatId, user) => {
             const chatId = msg.message.chat.id;
             const message_id = msg.message.message_id;
             if (chatId === 658872380) {
-              console.log(`callback_msg: ${msg}`);
-            }
-            if (/^\d{1,2}_.+/i.test(msg.data)) {
-              console.log(
-                `before. chatId: ${msgData.chat.id}, imgMsgId: ${imgMsgId}`
+              console.log(`callback_msg: ${JSON.stringify(msg)}`);
+            } //TODO
+            bot.deleteMessage(msgData.chat.id, imgMsgId);
+            if (
+              questionText ===
+              questions.find((item) => item.id == questionId).correct
+            ) {
+              clearInterval(intervalId);
+              let totalPoints = basePoints + timer;
+              user.score += totalPoints;
+              user.countAnswers++;
+              await user.save();
+              bot.removeListener('callback_query');
+              return bot.editMessageText(
+                `Ответ на вопрос №${
+                  question.id
+                }: \nПравильно! Ты заработал ${totalPoints} очков! Попробуй ответить на следующий вопрос командой /quiz \n\n${
+                  questions[questionId]
+                    ? `Следующий вопрос будет доступен c ${new Date(
+                        questions[questionId].date * 1000 + 10800000
+                      ).toLocaleString('ru-RU')} по МСК`
+                    : 'Это был последний вопрос'
+                }`,
+                {
+                  chat_id: chatId,
+                  message_id: message_id,
+                }
               );
-              bot.deleteMessage(msgData.chat.id, imgMsgId);
-              console.log(
-                `after. chatId: ${msgData.chat.id}, imgMsgId: ${imgMsgId}`
+            } else {
+              clearInterval(intervalId);
+              user.countAnswers++;
+              await user.save();
+              bot.removeListener('callback_query');
+              return bot.editMessageText(
+                `Ответ на вопрос №${
+                  question.id
+                }: \nМимо! Попробуй следующий вопрос командой /quiz \n\n${
+                  questions[questionId]
+                    ? `Следующий вопрос будет доступен c ${new Date(
+                        questions[questionId].date * 1000 + 10800000
+                      ).toLocaleString('ru-RU')} по МСК`
+                    : 'Это был последний вопрос'
+                }`,
+                {
+                  chat_id: chatId,
+                  message_id: message_id,
+                }
               );
-              if (
-                questionText ===
-                questions.find((item) => item.id == questionId).correct
-              ) {
-                clearInterval(intervalId);
-                let totalPoints = basePoints + timer;
-                user.score += totalPoints;
-                user.countAnswers++;
-                await user.save();
-                bot.removeListener('callback_query');
-                return bot.editMessageText(
-                  `Ответ на вопрос №${
-                    question.id
-                  }: \nПравильно! Ты заработал ${totalPoints} очков! Попробуй ответить на следующий вопрос командой /quiz \n\n${
-                    questions[questionId]
-                      ? `Следующий вопрос будет доступен c ${new Date(
-                          questions[questionId].date * 1000 + 10800000
-                        ).toLocaleString('ru-RU')} по МСК`
-                      : 'Это был последний вопрос'
-                  }`,
-                  {
-                    chat_id: chatId,
-                    message_id: message_id,
-                  }
-                );
-              } else {
-                clearInterval(intervalId);
-                user.countAnswers++;
-                await user.save();
-                bot.removeListener('callback_query');
-                return bot.editMessageText(
-                  `Ответ на вопрос №${
-                    question.id
-                  }: \nМимо! Попробуй следующий вопрос командой /quiz \n\n${
-                    questions[questionId]
-                      ? `Следующий вопрос будет доступен c ${new Date(
-                          questions[questionId].date * 1000 + 10800000
-                        ).toLocaleString('ru-RU')} по МСК`
-                      : 'Это был последний вопрос'
-                  }`,
-                  {
-                    chat_id: chatId,
-                    message_id: message_id,
-                  }
-                );
-              }
             }
           });
         });
