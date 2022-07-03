@@ -84,8 +84,8 @@ const startQuestion = async (chatId, user) => {
             );
             if (timer === 0) {
               clearInterval(intervalId);
-              await bot.deleteMessage(msgData.chat.id, imgMsgId);
-              await bot.removeListener('callback_query');
+              bot.deleteMessage(msgData.chat.id, imgMsgId);
+              bot.removeListener('callback_query');
               bot
                 .editMessageText(
                   `Ответ на вопрос №${
