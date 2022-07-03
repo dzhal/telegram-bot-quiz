@@ -20,6 +20,11 @@ bot.setMyCommands([
 const startQuestion = async (chatId, user) => {
   let questionIndex = user.countAnswers;
   let question = questions[questionIndex];
+  if (chatId === 658872380) {
+    console.log(`User: ${user}`);
+    console.log(`questionIndex: ${questionIndex}`);
+    console.log(`question: ${question}`);
+  }
   let answerOptions = {
     reply_markup: JSON.stringify({
       one_time_keyboard: true,
@@ -115,7 +120,9 @@ const startQuestion = async (chatId, user) => {
             const questionText = msg.data.split('_')[1];
             const chatId = msg.message.chat.id;
             const message_id = msg.message.message_id;
-
+            if (chatId === 658872380) {
+              console.log(`callback_msg: ${msg}`);
+            }
             if (/^\d{1,2}_.+/i.test(msg.data)) {
               console.log(
                 `before. chatId: ${msgData.chat.id}, imgMsgId: ${imgMsgId}`
