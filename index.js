@@ -8,6 +8,7 @@ const questionsTest = require('./questionsTest');
 const bot = new TelegramApi(process.env.TELEGRAM_BOT_TEST_API_KEY, {
   polling: true,
 });
+let canGetNextQuestion = true;
 
 bot.setMyCommands([
   { command: '/quiz', description: 'Получить вопрос OLIMPBET QUIZ!' },
@@ -20,11 +21,6 @@ bot.setMyCommands([
 const startQuestion = async (chatId, user) => {
   let questionIndex = user.countAnswers;
   let question = questions[questionIndex];
-  if (chatId === 658872380) {
-    console.log(`User: ${user}`);
-    console.log(`questionIndex: ${questionIndex}`);
-    console.log(`question: ${question}`);
-  }
   let answerOptions = {
     reply_markup: JSON.stringify({
       one_time_keyboard: true,
@@ -64,6 +60,8 @@ const startQuestion = async (chatId, user) => {
     .then((imgMsg) => {
       imgMsgId = imgMsg.message_id;
       imgMsgChatId = imgMsg.chat.chat_id;
+      user.countAnswers++;
+      user.save();
     })
     .then(() => {
       bot
@@ -86,32 +84,28 @@ const startQuestion = async (chatId, user) => {
             );
             if (timer === 0) {
               clearInterval(intervalId);
-              user.countAnswers++;
-              user.save();
-              console.log(
-                `before. chatId: ${msgData.chat.id}, imgMsgId: ${imgMsgId}`
-              );
-              bot.deleteMessage(msgData.chat.id, imgMsgId);
-              console.log(
-                `after. chatId: ${msgData.chat.id}, imgMsgId: ${imgMsgId}`
-              );
-              bot.removeListener('callback_query');
-              bot.editMessageText(
-                `Ответ на вопрос №${
-                  question.id
-                }: \nВремя на ответ вышло :( Переходи к следующему вопросу командой /quiz \n\n${
-                  questions[questionIndex + 1]
-                    ? `Следующий вопрос будет доступен c ${new Date(
-                        questions[questionIndex + 1].date * 1000 + 10800000
-                      ).toLocaleString('ru-RU')} по МСК`
-                    : 'Это был последний вопрос'
-                }`,
-                {
-                  chat_id: msgData.chat.id,
-                  message_id: msgData.message_id,
-                  parse_mode: 'HTML',
-                }
-              );
+              await bot.deleteMessage(msgData.chat.id, imgMsgId);
+              await bot.removeListener('callback_query');
+              bot
+                .editMessageText(
+                  `Ответ на вопрос №${
+                    question.id
+                  }: \nВремя на ответ вышло :( Переходи к следующему вопросу командой /quiz \n\n${
+                    questions[questionIndex + 1]
+                      ? `Следующий вопрос будет доступен c ${new Date(
+                          questions[questionIndex + 1].date * 1000 + 10800000
+                        ).toLocaleString('ru-RU')} по МСК`
+                      : 'Это был последний вопрос'
+                  }`,
+                  {
+                    chat_id: msgData.chat.id,
+                    message_id: msgData.message_id,
+                    parse_mode: 'HTML',
+                  }
+                )
+                .then(() => {
+                  canGetNextQuestion = true;
+                });
             }
           }, 1000);
 
@@ -120,10 +114,8 @@ const startQuestion = async (chatId, user) => {
             const questionText = msg.data.split('_')[1];
             const chatId = msg.message.chat.id;
             const message_id = msg.message.message_id;
-            if (chatId === 658872380) {
-              console.log(`callback_msg: ${JSON.stringify(msg)}`);
-            } //TODO
-            bot.deleteMessage(msgData.chat.id, imgMsgId);
+            await bot.removeListener(`callback_query`);
+            await bot.deleteMessage(msgData.chat.id, imgMsgId);
             if (
               questionText ===
               questions.find((item) => item.id == questionId).correct
@@ -131,44 +123,47 @@ const startQuestion = async (chatId, user) => {
               clearInterval(intervalId);
               let totalPoints = basePoints + timer;
               user.score += totalPoints;
-              user.countAnswers++;
               await user.save();
-              bot.removeListener('callback_query');
-              return bot.editMessageText(
-                `Ответ на вопрос №${
-                  question.id
-                }: \nПравильно! Ты заработал ${totalPoints} очков! Попробуй ответить на следующий вопрос командой /quiz \n\n${
-                  questions[questionId]
-                    ? `Следующий вопрос будет доступен c ${new Date(
-                        questions[questionId].date * 1000 + 10800000
-                      ).toLocaleString('ru-RU')} по МСК`
-                    : 'Это был последний вопрос'
-                }`,
-                {
-                  chat_id: chatId,
-                  message_id: message_id,
-                }
-              );
+              return bot
+                .editMessageText(
+                  `Ответ на вопрос №${
+                    question.id
+                  }: \nПравильно! Ты заработал ${totalPoints} очков! Попробуй ответить на следующий вопрос командой /quiz \n\n${
+                    questions[questionId]
+                      ? `Следующий вопрос будет доступен c ${new Date(
+                          questions[questionId].date * 1000 + 10800000
+                        ).toLocaleString('ru-RU')} по МСК`
+                      : 'Это был последний вопрос'
+                  }`,
+                  {
+                    chat_id: chatId,
+                    message_id: message_id,
+                  }
+                )
+                .then(() => {
+                  canGetNextQuestion = true;
+                });
             } else {
               clearInterval(intervalId);
-              user.countAnswers++;
-              await user.save();
-              bot.removeListener('callback_query');
-              return bot.editMessageText(
-                `Ответ на вопрос №${
-                  question.id
-                }: \nМимо! Попробуй следующий вопрос командой /quiz \n\n${
-                  questions[questionId]
-                    ? `Следующий вопрос будет доступен c ${new Date(
-                        questions[questionId].date * 1000 + 10800000
-                      ).toLocaleString('ru-RU')} по МСК`
-                    : 'Это был последний вопрос'
-                }`,
-                {
-                  chat_id: chatId,
-                  message_id: message_id,
-                }
-              );
+              return bot
+                .editMessageText(
+                  `Ответ на вопрос №${
+                    question.id
+                  }: \nМимо! Попробуй следующий вопрос командой /quiz \n\n${
+                    questions[questionId]
+                      ? `Следующий вопрос будет доступен c ${new Date(
+                          questions[questionId].date * 1000 + 10800000
+                        ).toLocaleString('ru-RU')} по МСК`
+                      : 'Это был последний вопрос'
+                  }`,
+                  {
+                    chat_id: chatId,
+                    message_id: message_id,
+                  }
+                )
+                .then(() => {
+                  canGetNextQuestion = true;
+                });
             }
           });
         });
@@ -310,6 +305,15 @@ const start = async () => {
             );
           }
         }
+        if (!canGetNextQuestion) {
+          return bot.sendMessage(
+            chatId,
+            'Необходимо ответить на предыдущий вопрос',
+            {
+              parse_mode: 'HTML',
+            }
+          );
+        }
         const currentDate = new Date().getTime() / 1000;
         const canAnswer = user.countAnswers < questions.length;
         const availableQuestions = questions.filter(
@@ -347,6 +351,7 @@ const start = async () => {
           );
         }
         if (availableQuestions.length > user.countAnswers) {
+          canGetNextQuestion = false;
           return startQuestion(chatId, user);
         }
         return bot.sendMessage(
@@ -362,19 +367,6 @@ const start = async () => {
         'Я тебя не понимаю, попробуй воспользоваться меню'
       );
     } catch (e) {
-      // try {
-      //   await UserModel.create({
-      //     chatId: chatId,
-      //     username: username,
-      //   });
-      // } catch (error) {
-      //   if (error.name === 'SequelizeUniqueConstraintError') {
-      //     return bot.sendMessage(
-      //       chatId,
-      //       `Ты уже зарегистрирован. Выбери в меню вопрос или введи команду /quiz`
-      //     );
-      //   }
-      // }
       return bot.sendMessage(
         chatId,
         `Произошла ошибка: ${e}, попробуй еще раз. ChatId = ${chatId}`
