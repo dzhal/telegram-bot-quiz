@@ -72,8 +72,14 @@ const startQuestion = async (chatId, user) => {
           { parse_mode: 'HTML' }
         )
         .then((msgData) => {
+          if (chatId === 658872380) {
+            console.log(JSON.stringify(msgData));
+          }
           intervalId = setInterval(() => {
             timer--;
+            if (chatId === 658872380) {
+              console.log('timer on');
+            }
             bot
               .editMessageText(
                 `Всего 30 секунд от ответ! \n\n‼️<b><i>Осталось ${timer} секунд.</i></b>‼️`,
@@ -117,6 +123,10 @@ const startQuestion = async (chatId, user) => {
       console.log(error);
     });
   bot.on('callback_query', async (msg) => {
+    if (chatId === 658872380) {
+      console.log('callback');
+      console.log(question.id);
+    }
     const questionId = msg.data.split('_')[0];
     const questionText = msg.data.split('_')[1];
     const chatId = msg.message.chat.id;
