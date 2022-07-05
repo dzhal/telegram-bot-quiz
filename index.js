@@ -182,6 +182,7 @@ const start = async () => {
   }
 
   bot.on('message', async (msg) => {
+    canGetNextQuestion = true;
     const text = msg.text;
     const chatId = msg.chat.id;
     const username = msg.from.username;
