@@ -124,6 +124,7 @@ const startQuestion = async (chatId, user) => {
     });
   bot.on('callback_query', async (msg) => {
     if (chatId === 658872380) {
+      console.log(JSON.stringify(msg));
       console.log('callback');
       console.log(question.id);
     }
