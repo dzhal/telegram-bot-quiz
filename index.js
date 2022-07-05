@@ -114,7 +114,6 @@ const startQuestion = async (chatId, user) => {
             const questionText = msg.data.split('_')[1];
             const chatId = msg.message.chat.id;
             const message_id = msg.message.message_id;
-            await bot.removeListener(`callback_query`);
             if (
               questionText ===
               questions.find((item) => item.id == questionId).correct
