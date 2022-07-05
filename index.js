@@ -115,7 +115,6 @@ const startQuestion = async (chatId, user) => {
             const chatId = msg.message.chat.id;
             const message_id = msg.message.message_id;
             await bot.removeListener(`callback_query`);
-            await bot.deleteMessage(msgData.chat.id, imgMsgId);
             if (
               questionText ===
               questions.find((item) => item.id == questionId).correct
