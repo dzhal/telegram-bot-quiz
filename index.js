@@ -333,6 +333,9 @@ const start = async () => {
         const availableQuestions = questions.filter(
           (q) => q.date < currentDate
         );
+        if (chatId === 658872380) {
+          console.log(currentDate);
+        }
         if (currentDate > 1657054799 + 10800) {
           return bot.sendMessage(
             chatId,
