@@ -323,7 +323,7 @@ const start = async () => {
         const availableQuestions = questions.filter(
           (q) => q.date < currentDate
         );
-        if (currentDate > 1657054799) {
+        if (currentDate > 1657054799 + 10800000) {
           return bot.sendMessage(
             chatId,
             'Время на ответы истекло, мы уже начали подводить итоги. \nТы можешь посмотреть свою статистику командой /info и общий зачет командой /leaderboard',
