@@ -106,7 +106,7 @@ const startQuestion = async (chatId, user) => {
                           : 'Это был последний вопрос'
                       }`,
                       {
-                        chat_id: msgData.chat.id,
+                        chat_id: chatId,
                         message_id: msgData.message_id,
                         parse_mode: 'HTML',
                       }
