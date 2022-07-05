@@ -336,7 +336,7 @@ const start = async () => {
         if (chatId === 658872380) {
           console.log(currentDate);
         }
-        if (currentDate > 1657054799 + 10800) {
+        if (currentDate > 1657054799) {
           return bot.sendMessage(
             chatId,
             'Время на ответы истекло, мы уже начали подводить итоги. \nТы можешь посмотреть свою статистику командой /info и общий зачет командой /leaderboard',
