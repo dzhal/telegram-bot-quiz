@@ -73,40 +73,42 @@ const startQuestion = async (chatId, user) => {
         .then((msgData) => {
           let intervalId = setInterval(() => {
             timer--;
-            bot.editMessageText(
-              `Всего 30 секунд от ответ! \n\n‼️<b><i>Осталось ${timer} секунд.</i></b>‼️`,
-              {
-                ...answerOptions,
-                chat_id: msgData.chat.id,
-                message_id: msgData.message_id,
-                parse_mode: 'HTML',
-              }
-            );
-            if (timer === 0) {
-              clearInterval(intervalId);
-              bot.deleteMessage(msgData.chat.id, imgMsgId);
-              bot.removeListener('callback_query');
-              bot
-                .editMessageText(
-                  `Ответ на вопрос №${
-                    question.id
-                  }: \nВремя на ответ вышло :( Переходи к следующему вопросу командой /quiz \n\n${
-                    questions[questionIndex + 1]
-                      ? `Следующий вопрос будет доступен c ${new Date(
-                          questions[questionIndex + 1].date * 1000 + 10800000
-                        ).toLocaleString('ru-RU')} по МСК`
-                      : 'Это был последний вопрос'
-                  }`,
-                  {
-                    chat_id: msgData.chat.id,
-                    message_id: msgData.message_id,
-                    parse_mode: 'HTML',
-                  }
-                )
-                .then(() => {
-                  canGetNextQuestion = true;
-                });
-            }
+            bot
+              .editMessageText(
+                `Всего 30 секунд от ответ! \n\n‼️<b><i>Осталось ${timer} секунд.</i></b>‼️`,
+                {
+                  ...answerOptions,
+                  chat_id: msgData.chat.id,
+                  message_id: msgData.message_id,
+                  parse_mode: 'HTML',
+                }
+              )
+              .then(() => {
+                if (timer === 0) {
+                  clearInterval(intervalId);
+                  bot
+                    .editMessageText(
+                      `Ответ на вопрос №${
+                        question.id
+                      }: \nВремя на ответ вышло :( Переходи к следующему вопросу командой /quiz \n\n${
+                        questions[questionIndex + 1]
+                          ? `Следующий вопрос будет доступен c ${new Date(
+                              questions[questionIndex + 1].date * 1000 +
+                                10800000
+                            ).toLocaleString('ru-RU')} по МСК`
+                          : 'Это был последний вопрос'
+                      }`,
+                      {
+                        chat_id: msgData.chat.id,
+                        message_id: msgData.message_id,
+                        parse_mode: 'HTML',
+                      }
+                    )
+                    .then(() => {
+                      canGetNextQuestion = true;
+                    });
+                }
+              });
           }, 1000);
 
           bot.on('callback_query', async (msg) => {
