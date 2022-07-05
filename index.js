@@ -129,7 +129,7 @@ const startQuestion = async (chatId, user) => {
     }
     const questionId = msg.data.split('_')[0];
     const questionText = msg.data.split('_')[1];
-    const chatId = msg.message.chat.id;
+    // const chatId = msg.message.chat.id;
     const message_id = msg.message.message_id;
 
     if (
